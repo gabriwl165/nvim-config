@@ -22,6 +22,7 @@ Includes LSP, auto-completion, formatting, linting, fuzzy finding, and a polishe
    - [Completion](#completion-pluginscompletionlua)
    - [Treesitter](#treesitter-pluginstreesitterlua)
    - [Telescope](#telescope-pluginsTelescopelua)
+   - [AI (Claude Code)](#ai-claude-code-pluginsailua)
 7. [Go Development](#7-go-development)
 8. [Python Development](#8-python-development)
 9. [Key Bindings Reference](#9-key-bindings-reference)
@@ -37,6 +38,7 @@ Includes LSP, auto-completion, formatting, linting, fuzzy finding, and a polishe
 | Requirement | Minimum version | Notes |
 |-------------|----------------|-------|
 | NeoVim | **0.10+** | Required for modern LSP APIs |
+| Claude Code CLI | latest | Required by claudecode.nvim — run `claude login` once to authenticate |
 | Git | any | Used by lazy.nvim to clone plugins |
 | A Nerd Font | any | Required by icons (e.g. [JetBrainsMono Nerd Font](https://www.nerdfonts.com/)) |
 | `make` | any | Required by `telescope-fzf-native` build step |
@@ -169,7 +171,8 @@ After installation completes:
         ├── lsp.lua           ← Mason, nvim-lspconfig, gopls, pyright…
         ├── completion.lua    ← nvim-cmp + LuaSnip
         ├── treesitter.lua    ← Syntax highlighting + text objects
-        └── telescope.lua     ← Fuzzy finder
+        ├── telescope.lua     ← Fuzzy finder
+        └── ai.lua            ← claudecode.nvim (Claude Code CLI integration)
 ```
 
 ---
@@ -500,6 +503,22 @@ Uses `telescope-fzf-native` (compiled C extension) for high-performance sorting 
 
 ---
 
+### AI / Claude Code (`plugins/ai.lua`)
+
+#### `coder/claudecode.nvim`
+
+Integrates the Claude Code CLI directly into NeoVim using the same protocol as the official VS Code extension. Works with a **Claude Pro subscription** — no Anthropic API key needed. Authenticates via your existing `claude login` session.
+
+Run `claude login` once in your terminal before using it.
+
+| Key | Mode | Action |
+|-----|------|--------|
+| `<leader>ac` | Normal | Toggle Claude Code terminal |
+| `<leader>as` | Visual | Send selection to Claude |
+| `<leader>aS` | Normal | Send current buffer to Claude |
+
+---
+
 ## 7. Go Development
 
 ### What's configured
@@ -724,6 +743,14 @@ The `max-line-length = 88` and `extend-ignore` settings make flake8 compatible w
 | `<leader>pyr` | `python3 %` |
 | `<leader>pyt` | `python3 -m pytest` |
 | `<leader>pyv` | `python3 -m venv .venv` |
+
+### AI (Claude Code)
+
+| Key | Mode | Action |
+|-----|------|--------|
+| `<leader>ac` | Normal | Toggle Claude Code terminal |
+| `<leader>as` | Visual | Send selection to Claude |
+| `<leader>aS` | Normal | Send current buffer to Claude |
 
 ---
 
