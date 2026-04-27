@@ -71,7 +71,6 @@ map("n", "]d",        function() vim.diagnostic.jump({ count =  1, float = true 
 
 -- ─── Trouble (v3 syntax) ────────────────────────────────────────────────────
 map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>",                       "Toggle Trouble (workspace)")
-map("n", "<leader>xw", "<cmd>Trouble diagnostics toggle<cr>",                       "Workspace diagnostics")
 map("n", "<leader>xd", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",          "Document diagnostics")
 map("n", "<leader>xs", "<cmd>Trouble symbols toggle focus=false<cr>",               "Symbols (Trouble)")
 map("n", "<leader>xl", "<cmd>Trouble lsp toggle focus=false win.position=right<cr>","LSP refs/defs (Trouble)")
@@ -155,5 +154,5 @@ map("n", "<leader>goD", function() require("dap-go").debug_test() end,       "Go
 
 map("n", "<leader>pyr", function() Snacks.terminal.open({ "python3", vim.fn.expand("%") }, dock_bottom) end, "Python: run current file")
 map("n", "<leader>pyt", function() Snacks.terminal.open({ "python3", "-m", "pytest" })                  end, "Python: run pytest")
-map("n", "<leader>pyv", "<cmd>!python3 -m venv .venv<cr>",                                                    "Python: create venv")
+map("n", "<leader>pyv", function() Snacks.terminal.open({ "python3", "-m", "venv", ".venv" }) end,            "Python: create venv")
 map("n", "<leader>pyd", function() require("dap").continue() end,                                             "Python: debug (launch / continue)")

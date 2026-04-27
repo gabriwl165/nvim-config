@@ -26,9 +26,6 @@ return {
             "folke/lazydev.nvim",
         },
         config = function()
-            -- Mason must be set up before mason-lspconfig so its bin/ is on PATH
-            require("mason").setup()
-
             local servers = { "gopls", "pyright", "lua_ls" }
 
             require("mason-lspconfig").setup({
@@ -60,7 +57,7 @@ return {
                     m("gI",         vim.lsp.buf.implementation,   "Go to implementation")
                     m("gy",         vim.lsp.buf.type_definition,  "Go to type definition")
                     m("K",          vim.lsp.buf.hover,            "Hover documentation")
-                    m("<C-k>",      vim.lsp.buf.signature_help,   "Signature help")
+                    m("<leader>lk", vim.lsp.buf.signature_help,   "Signature help")
                     m("<leader>la", vim.lsp.buf.code_action,      "Code action")
                     m("<leader>lr", vim.lsp.buf.rename,           "Rename symbol")
                     m("<leader>ls", vim.lsp.buf.document_symbol,  "Document symbols")

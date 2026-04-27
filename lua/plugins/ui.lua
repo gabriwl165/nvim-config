@@ -175,6 +175,8 @@ return {
                 { "<leader>gh",    group = "Git hunks" },
                 { "<leader>go",    group = "Go" },
                 { "<leader>l",     group = "LSP" },
+                { "<leader>n",     group = "Swap next" },
+                { "<leader>p",     group = "Swap previous" },
                 { "<leader>py",    group = "Python" },
                 { "<leader>s",     group = "Splits" },
                 { "<leader>t",     group = "Terminal" },
