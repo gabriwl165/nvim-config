@@ -118,7 +118,7 @@ Lockfile: `lazy-lock.json` records the resolved branch + commit for each plugin.
 | `lewis6991/gitsigns.nvim` | Git diff signs + hunk-level operations (`<leader>gh*`) |
 | `tpope/vim-fugitive` (+ `tpope/vim-rhubarb`) | Full Git wrapper. `:Git`/`:G` runs any git command; lazy-loaded via `cmd` and `keys`. rhubarb adds GitHub URL handling for `:GBrowse`. |
 | `folke/which-key.nvim` | Keybinding popups (uses v3 `wk.add()` API for groups) |
-| `folke/snacks.nvim` | Provides `dashboard` + `notifier` modules (replaces alpha-nvim and nvim-notify) |
+| `folke/snacks.nvim` | Provides `dashboard` + `notifier` + `terminal` modules. `terminal` exposes `Snacks.terminal.toggle/open()` for persistent toggleable floating/docked terminals. |
 
 ### Editor — `plugins/editor.lua`
 
@@ -139,10 +139,15 @@ Lockfile: `lazy-lock.json` records the resolved branch + commit for each plugin.
 Uses the **Neovim 0.11+ `vim.lsp.config` API**, not the older `lspconfig.<server>.setup()` pattern.
 
 ```lua
+local servers = { "gopls", "pyright", "lua_ls" }
+
 require("mason").setup()
 require("mason-lspconfig").setup({
-    ensure_installed = { "gopls", "pyright", "lua_ls" },
-    automatic_enable = true,  -- mason-lspconfig 2.x: auto vim.lsp.enable()
+    ensure_installed = servers,
+    -- We drive vim.lsp.enable ourselves below; this avoids mason-lspconfig
+    -- routing through the legacy require('lspconfig').<server> framework,
+    -- which errors hard on nvim-lspconfig v3.x.
+    automatic_enable = false,
 })
 
 vim.o.winborder = "rounded"
@@ -153,6 +158,8 @@ vim.lsp.config("*", { capabilities = capabilities })
 vim.lsp.config("gopls", { settings = { gopls = { ... } } })
 vim.lsp.config("pyright", { settings = { ... } })
 vim.lsp.config("lua_ls", { settings = { Lua = { ... } } })
+
+vim.lsp.enable(servers)
 ```
 
 `folke/lazydev.nvim` (loaded `ft = "lua"`) replaces the deprecated `neodev.nvim` — provides Neovim API type hints to `lua_ls` when editing this config.
@@ -218,7 +225,9 @@ Default insert-mode mappings inside Telescope: `<C-j>`/`<C-k>` next/prev, `<C-q>
 
 - **Per-language autocmds** live in `core/autocmds.lua` (use `vim.opt_local.*`).
 - **Per-language keymaps** use a `<leader>{lang-prefix}` pattern: `<leader>go*` for Go, `<leader>py*` for Python, `<leader>a*` for AI.
-- **Run / test / build commands** open a bottom terminal split (`botright 15split | terminal cmd`) — never blocking `:!`. This keeps the screen usable while logs stream. `<Esc><Esc>` exits terminal-insert; `<leader>sx` closes the split.
+- **Run / test / build commands** use `Snacks.terminal.open({ "cmd", "args" })` — opens a transient floating terminal that auto-disposes on close, keeps the screen usable while logs stream. Never blocking `:!`.
+- **Persistent terminals** use `Snacks.terminal.toggle()` keyed by direction (bottom/right/float). Same keymap reopens the same terminal with state intact.
+- `<Esc><Esc>` exits terminal-insert; `<C-/>` toggles float terminal from any mode.
 - **Plugin specs** are grouped by domain, never by language. A new language touches multiple files (LSP, conform, lint, treesitter, autocmds).
 - **Format-on-save** is gated through conform with `lsp_format = "fallback"`. Direct `vim.lsp.buf.format()` is not used.
 - **No direct database/network calls** from plugin specs. All side effects belong in `config = function() ... end` blocks evaluated by lazy.
@@ -234,7 +243,7 @@ Example: Rust.
 ```lua
 require("mason-lspconfig").setup({
     ensure_installed = { "gopls", "pyright", "lua_ls", "rust_analyzer" },
-    automatic_enable = true,
+    automatic_enable = false,
 })
 
 vim.lsp.config("rust_analyzer", {

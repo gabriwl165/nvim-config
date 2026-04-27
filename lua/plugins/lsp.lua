@@ -29,14 +29,13 @@ return {
             -- Mason must be set up before mason-lspconfig so its bin/ is on PATH
             require("mason").setup()
 
+            local servers = { "gopls", "pyright", "lua_ls" }
+
             require("mason-lspconfig").setup({
-                ensure_installed = {
-                    "gopls",   -- Go
-                    "pyright", -- Python
-                    "lua_ls",  -- Lua
-                },
-                -- mason-lspconfig 2.x: auto-enables installed servers via vim.lsp.enable()
-                automatic_enable = true,
+                ensure_installed = servers,
+                -- We call vim.lsp.enable ourselves below; avoid the legacy
+                -- require('lspconfig').<server> path that breaks on nvim-lspconfig v3.
+                automatic_enable = false,
             })
 
             -- Rounded borders for floating LSP windows (Neovim 0.11+ global option)
@@ -138,6 +137,8 @@ return {
                     },
                 },
             })
+
+            vim.lsp.enable(servers)
         end,
     },
 

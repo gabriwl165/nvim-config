@@ -191,6 +191,12 @@ return {
                 enabled = true,
                 timeout = 3000,
             },
+            terminal = {
+                win = {
+                    border = "rounded",
+                    wo = { winbar = "" },
+                },
+            },
             dashboard = {
                 enabled = true,
                 preset = {

@@ -141,27 +141,37 @@ On first launch, lazy.nvim bootstraps and installs every plugin. Mason auto-inst
 
 ### Terminal
 
-Use terminal **splits** so command output doesn't take over the whole screen. The Go and Python run keymaps (`<leader>gor`, `<leader>pyt`, etc.) already open in a bottom split.
+Powered by `Snacks.terminal` — terminals are **persistent and toggleable**. Hide one and reopen it with the same shell, scrollback, and running process.
 
 | Key | Action |
 |-----|--------|
-| `<leader>tt` | Open terminal in horizontal split (bottom) |
-| `<leader>tv` | Open terminal in vertical split (right) |
-| `<leader>tf` | Open terminal in a new tab (full-screen) |
-| `<Esc><Esc>` | Leave terminal-insert mode (double-Esc) |
+| `<C-/>` | Toggle floating scratch terminal (works in normal AND terminal mode) |
+| `<leader>tt` | Toggle bottom-docked terminal (35% screen height) |
+| `<leader>tv` | Toggle right-docked terminal (45% width) |
+| `<leader>tf` | Toggle floating terminal (same as `<C-/>`) |
+| `<Esc><Esc>` | Leave terminal-insert mode (so you can scroll/copy) |
 | `<C-h/j/k/l>` | Jump to another window from inside the terminal |
-| `<leader>sx` | Close the terminal split |
-| `i` / `a` | Re-enter terminal-insert mode (after `<Esc><Esc>`) |
-| `:bd!` | Force-kill the terminal buffer (and its process) |
+| `i` / `a` | Re-enter terminal-insert mode |
+| `q` (in normal mode inside terminal) | Close the floating window (process keeps running, reopen with same key) |
+| `:bd!` | Permanently kill the terminal buffer + its process |
+
+The bottom, right, and float terminals are **independent and persist** — they're three different terminals you can have running side-by-side. `<leader>gor`, `<leader>pyt`, etc. open a transient floating terminal that auto-disposes when you close it.
 
 **Typical workflow when running Go/Python:**
 
-1. `<leader>gor` → output appears in a bottom split.
-2. Press `<Esc><Esc>` to leave insert mode (so you can scroll).
-3. `<C-k>` to jump back to your code (or `<C-h>`/`<C-j>`/`<C-l>` depending on layout).
-4. When done, `<C-j>` back into the terminal split, then `<leader>sx` to close it.
+1. `<leader>gor` → floating window pops up running `go run %`.
+2. When done, press `q` in normal mode (or `<Esc><Esc>` then `q`) to close.
+3. Or press `<C-/>` to hide it and pull up your scratch shell instead.
 
-To run multiple commands side-by-side, just call `<leader>tt` again — each call opens a fresh terminal split.
+**Multiple terminals simultaneously:**
+
+```
+<leader>tt   → bottom terminal: long-running server
+<leader>tv   → right terminal: tail logs
+<C-/>        → floating: ad-hoc commands
+```
+
+Each one toggles independently. Hide and reopen freely — the processes keep running.
 
 ### Editing
 
