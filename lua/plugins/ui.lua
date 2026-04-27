@@ -115,8 +115,9 @@ return {
                 local m = function(l, r, desc)
                     vim.keymap.set("n", l, r, { buffer = bufnr, desc = desc })
                 end
-                m("]c",          gs.next_hunk,                         "Git: next hunk")
-                m("[c",          gs.prev_hunk,                         "Git: prev hunk")
+                -- ]c/[c are reserved for treesitter class motion; hunks use ]h/[h.
+                m("]h",          function() gs.nav_hunk("next") end,   "Git: next hunk")
+                m("[h",          function() gs.nav_hunk("prev") end,   "Git: prev hunk")
                 m("<leader>ghs", gs.stage_hunk,                        "Git: stage hunk")
                 m("<leader>ghr", gs.reset_hunk,                        "Git: reset hunk")
                 m("<leader>ghS", gs.stage_buffer,                      "Git: stage buffer")
@@ -166,16 +167,18 @@ return {
             local wk = require("which-key")
             wk.setup(opts)
             wk.add({
+                { "<leader>a",     group = "AI (Claude)" },
+                { "<leader>b",     group = "Buffers" },
+                { "<leader>D",     group = "Debug (DAP)" },
                 { "<leader>f",     group = "Find (Telescope)" },
                 { "<leader>g",     group = "Git" },
                 { "<leader>gh",    group = "Git hunks" },
-                { "<leader>l",     group = "LSP" },
-                { "<leader>s",     group = "Splits" },
-                { "<leader>b",     group = "Buffers" },
-                { "<leader>x",     group = "Trouble / Diagnostics" },
                 { "<leader>go",    group = "Go" },
+                { "<leader>l",     group = "LSP" },
                 { "<leader>py",    group = "Python" },
+                { "<leader>s",     group = "Splits" },
                 { "<leader>t",     group = "Terminal" },
+                { "<leader>x",     group = "Trouble / Diagnostics" },
                 { "<leader><Tab>", group = "Tabs" },
             })
         end,

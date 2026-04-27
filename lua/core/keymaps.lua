@@ -66,13 +66,17 @@ map("n", "<leader>li", "<cmd>LspInfo<cr>", "LSP info")
 
 -- ─── Diagnostics ────────────────────────────────────────────────────────────
 map("n", "<leader>d", vim.diagnostic.open_float, "Open diagnostic float")
-map("n", "[d",        vim.diagnostic.goto_prev,  "Previous diagnostic")
-map("n", "]d",        vim.diagnostic.goto_next,  "Next diagnostic")
+map("n", "[d",        function() vim.diagnostic.jump({ count = -1, float = true }) end, "Previous diagnostic")
+map("n", "]d",        function() vim.diagnostic.jump({ count =  1, float = true }) end, "Next diagnostic")
 
--- ─── Trouble ────────────────────────────────────────────────────────────────
-map("n", "<leader>xx", "<cmd>TroubleToggle<cr>",                          "Toggle Trouble")
-map("n", "<leader>xw", "<cmd>TroubleToggle workspace_diagnostics<cr>",    "Workspace diagnostics")
-map("n", "<leader>xd", "<cmd>TroubleToggle document_diagnostics<cr>",     "Document diagnostics")
+-- ─── Trouble (v3 syntax) ────────────────────────────────────────────────────
+map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>",                       "Toggle Trouble (workspace)")
+map("n", "<leader>xw", "<cmd>Trouble diagnostics toggle<cr>",                       "Workspace diagnostics")
+map("n", "<leader>xd", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",          "Document diagnostics")
+map("n", "<leader>xs", "<cmd>Trouble symbols toggle focus=false<cr>",               "Symbols (Trouble)")
+map("n", "<leader>xl", "<cmd>Trouble lsp toggle focus=false win.position=right<cr>","LSP refs/defs (Trouble)")
+map("n", "<leader>xq", "<cmd>Trouble qflist toggle<cr>",                            "Quickfix (Trouble)")
+map("n", "<leader>xL", "<cmd>Trouble loclist toggle<cr>",                           "Loclist (Trouble)")
 
 -- ─── Terminal (Snacks.terminal — toggleable, persistent) ───────────────────
 -- <C-/> toggles a floating scratch terminal (process keeps running when hidden).
@@ -144,7 +148,12 @@ map("n", "<leader>gor", function() Snacks.terminal.open({ "go", "run", vim.fn.ex
 map("n", "<leader>got", function() Snacks.terminal.open({ "go", "test", "./..." })                       end, "Go: test all packages")
 map("n", "<leader>gob", function() Snacks.terminal.open({ "go", "build", "./..." })                      end, "Go: build all packages")
 map("n", "<leader>goi", function() Snacks.terminal.open({ "go", "mod", "tidy" })                         end, "Go: tidy modules")
+-- Debug entrypoints: continue() picks the first matching configuration from
+-- .vscode/launch.json (when present) or falls back to dap-go's auto config.
+map("n", "<leader>god", function() require("dap").continue() end,            "Go: debug (launch / continue)")
+map("n", "<leader>goD", function() require("dap-go").debug_test() end,       "Go: debug nearest test")
 
 map("n", "<leader>pyr", function() Snacks.terminal.open({ "python3", vim.fn.expand("%") }, dock_bottom) end, "Python: run current file")
 map("n", "<leader>pyt", function() Snacks.terminal.open({ "python3", "-m", "pytest" })                  end, "Python: run pytest")
 map("n", "<leader>pyv", "<cmd>!python3 -m venv .venv<cr>",                                                    "Python: create venv")
+map("n", "<leader>pyd", function() require("dap").continue() end,                                             "Python: debug (launch / continue)")

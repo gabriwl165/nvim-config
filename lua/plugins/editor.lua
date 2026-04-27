@@ -44,8 +44,9 @@ return {
     },
 
     -- ─── Formatting ───────────────────────────────────────────────────────────
-    -- conform runs format-on-save; the autocmds.lua hook calls it for .go/.py.
-    -- You can also trigger it manually with <leader>lf.
+    -- conform exposes formatters_by_ft and the manual <leader>lf binding.
+    -- The actual format-on-save trigger lives in core/autocmds.lua (BufWritePre
+    -- on *.go,*.py) so we keep one canonical hook instead of doubling up.
     {
         "stevearc/conform.nvim",
         cmd = "ConformInfo",
@@ -57,10 +58,6 @@ return {
                 json   = { "prettier" },
                 yaml   = { "prettier" },
                 markdown = { "prettier" },
-            },
-            -- format_on_save is handled in autocmds.lua for fine-grained control
-            format_after_save = {
-                lsp_format = "fallback",
             },
         },
     },

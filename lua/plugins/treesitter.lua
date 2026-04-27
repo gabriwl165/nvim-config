@@ -6,6 +6,9 @@ return {
         event = { "BufReadPre", "BufNewFile" },
         cmd = { "TSUpdate", "TSUpdateSync", "TSInstall", "TSInstallSync", "TSInstallInfo", "TSUninstall", "TSBufEnable", "TSBufDisable", "TSEnable", "TSDisable", "TSModuleInfo" },
         dependencies = {
+            -- Stay on master to match nvim-treesitter master (legacy line).
+            -- The `main` branch of textobjects targets the async rewrite of
+            -- nvim-treesitter `main`; switching only one side breaks the API.
             { "nvim-treesitter/nvim-treesitter-textobjects", branch = "master" },
             "JoosepAlviste/nvim-ts-context-commentstring",
         },

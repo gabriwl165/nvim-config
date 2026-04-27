@@ -6,16 +6,23 @@ augroup("YankHighlight", { clear = true })
 autocmd("TextYankPost", {
     group = "YankHighlight",
     callback = function()
-        vim.highlight.on_yank({ higroup = "Visual", timeout = 200 })
+        (vim.hl or vim.highlight).on_yank({ higroup = "Visual", timeout = 200 })
     end,
 })
 
--- Remove trailing whitespace on save
+-- Remove trailing whitespace on save (skip read-only / scratch buffers so
+-- :checkhealth, :Lazy, etc. don't trip "Cannot make changes" errors).
 augroup("TrimWhitespace", { clear = true })
 autocmd("BufWritePre", {
     group = "TrimWhitespace",
     pattern = "*",
-    command = "%s/\\s\\+$//e",
+    callback = function(args)
+        if vim.bo[args.buf].modifiable and vim.bo[args.buf].buftype == "" then
+            local view = vim.fn.winsaveview()
+            vim.cmd([[silent! keeppatterns %s/\s\+$//e]])
+            vim.fn.winrestview(view)
+        end
+    end,
 })
 
 -- Auto-resize splits when the terminal window is resized

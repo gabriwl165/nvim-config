@@ -94,10 +94,12 @@ return {
                             rangeVariableTypes = true,
                         },
                         analyses = {
-                            nilness = true,
+                            nilness      = true,
                             unusedparams = true,
-                            unusedwrite = true,
-                            useany = true,
+                            unusedwrite  = true,
+                            -- gopls renamed `useany` to `any` upstream; keep the
+                            -- old key as a no-op alias for older gopls binaries.
+                            any          = true,
                         },
                         usePlaceholders = true,
                         completeUnimported = true,
@@ -113,15 +115,13 @@ return {
             -- ── Python (pyright) ──────────────────────────────────────────────
             vim.lsp.config("pyright", {
                 settings = {
-                    pyright = {
-                        autoImportCompletion = true,
-                    },
                     python = {
                         analysis = {
                             autoSearchPaths = true,
                             diagnosticMode = "openFilesOnly",
                             useLibraryCodeForTypes = true,
                             typeCheckingMode = "basic",
+                            autoImportCompletions = true,
                         },
                     },
                 },

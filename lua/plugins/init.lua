@@ -18,10 +18,10 @@ require("lazy").setup({
         { import = "plugins.completion" },
         { import = "plugins.treesitter" },
         { import = "plugins.telescope" },
+        { import = "plugins.debug" },
         { import = "plugins.ai" },
     },
     defaults = {
-        lazy = false,
         version = false,
     },
     install = {

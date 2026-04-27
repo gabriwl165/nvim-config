@@ -11,6 +11,7 @@ A modern Neovim setup for **Go** and **Python** development, with LSP, completio
 - LSP-powered intellisense (gopls, pyright, lua_ls)
 - Format-on-save (gofumpt + goimports for Go, isort + black for Python)
 - Linting (golangci-lint, flake8)
+- Debugging via DAP (delve for Go, debugpy for Python; reads `.vscode/launch.json`)
 - Fuzzy finder (Telescope + fzf-native)
 - File explorer, statusline, buffer tabs, indent guides, git signs
 - Full Git workflow (fugitive: `:Git`, blame, diff split, browse)
@@ -117,7 +118,11 @@ On first launch, lazy.nvim bootstraps and installs every plugin. Mason auto-inst
 |-----|--------|
 | `<leader>d` | Open diagnostic float |
 | `[d` / `]d` | Previous / next diagnostic |
-| `<leader>xx` | Toggle Trouble panel |
+| `<leader>xx` | Toggle Trouble (workspace diagnostics) |
+| `<leader>xd` | Trouble — current buffer diagnostics only |
+| `<leader>xs` | Trouble — document symbols |
+| `<leader>xl` | Trouble — LSP references / definitions |
+| `<leader>xq` / `<leader>xL` | Trouble — quickfix / location list |
 
 ### Buffers (open files) & Windows (splits)
 
@@ -205,7 +210,7 @@ Full Git wrapper. `:Git` (or `:G`) runs any git command; useful subcommands have
 
 | Key | Action |
 |-----|--------|
-| `]c` / `[c` | Next / previous hunk |
+| `]h` / `[h` | Next / previous hunk (`gs.nav_hunk`) |
 | `<leader>ghs` / `<leader>ghr` | Stage / reset hunk |
 | `<leader>ghS` / `<leader>ghR` | Stage / reset entire buffer |
 | `<leader>ghp` | Preview hunk |
@@ -220,6 +225,8 @@ Full Git wrapper. `:Git` (or `:G`) runs any git command; useful subcommands have
 | `<leader>got` | `go test ./...` |
 | `<leader>gob` | `go build ./...` |
 | `<leader>goi` | `go mod tidy` |
+| `<leader>god` | Debug Go (delve) — pick a config from `.vscode/launch.json`, or `dap-go` falls back to current file / package |
+| `<leader>goD` | Debug nearest Go test (`dap-go.debug_test`) |
 
 ### Python
 
@@ -228,6 +235,51 @@ Full Git wrapper. `:Git` (or `:G`) runs any git command; useful subcommands have
 | `<leader>pyr` | `python3 %` |
 | `<leader>pyt` | `python3 -m pytest` |
 | `<leader>pyv` | `python3 -m venv .venv` |
+| `<leader>pyd` | Debug Python (debugpy) — current file or `.vscode/launch.json` config |
+| `<leader>pyD` | Debug nearest pytest method (`dap-python.test_method`) |
+
+### Debugging (DAP)
+
+Powered by [`nvim-dap`](https://github.com/mfussenegger/nvim-dap) with `dap-ui`, virtual text, delve (Go), and debugpy (Python). Adapters are auto-installed on first use via `mason-nvim-dap`.
+
+**Workflow:** drop a breakpoint with `<leader>Db` (or `<F9>`) → press `<leader>god` / `<leader>pyd` (or `<F5>`) to start. A picker shows the available configurations; the `dap-ui` panels (scopes, watches, breakpoints, stacks, repl, console) open automatically and close when the session ends.
+
+**Configurations come from two sources, with no setup required:**
+
+1. **Built-in defaults** from `nvim-dap-go` and `nvim-dap-python` — debug current file, debug package, debug nearest test, run pytest, etc. These work in any project, no `launch.json` needed.
+2. **`.vscode/launch.json`** — auto-loaded on startup when present, so any per-project configuration (custom `buildFlags`, `env`, `args`, `cwd`...) is reused as-is.
+
+To scaffold a starter `.vscode/launch.json` in the current project, run `:DapInit` (or `<leader>DI`). It writes a template with sensible Go + Python configs and refuses to overwrite an existing file (use `:DapInit!` to force). After editing, reload with `<leader>DL`.
+
+#### Session controls
+
+| Key | Action |
+|-----|--------|
+| `<F5>` / `<leader>Dc` | Start / continue |
+| `<F10>` / `<leader>Dn` | Step over (next) |
+| `<F11>` / `<leader>Di` | Step into |
+| `<F12>` / `<leader>Do` | Step out |
+| `<F9>` / `<leader>Db` | Toggle breakpoint |
+| `<leader>DB` | Conditional breakpoint (prompts for expression) |
+| `<leader>Dl` | Run last configuration |
+| `<leader>Dr` | Toggle DAP REPL |
+| `<leader>Dq` | Terminate session |
+| `<leader>Dh` | Hover variable under cursor |
+| `<leader>De` | Evaluate expression (visual selection or word under cursor) |
+| `<leader>Du` | Toggle the `dap-ui` panels |
+| `<leader>DL` | Reload `.vscode/launch.json` |
+| `<leader>DI` | Bootstrap `.vscode/launch.json` template (`:DapInit`) |
+
+#### Per-project configuration
+
+Most projects don't need anything — the built-in defaults handle "debug current file / package / test" out of the box. Add a `.vscode/launch.json` only when you need:
+
+- **Custom build flags** (e.g. `"buildFlags": "-tags integration"`).
+- **Environment variables** (e.g. CGO paths, API keys) that aren't already exported in your shell.
+- **Program arguments** or a non-default `cwd`.
+- **Multiple named entry points** (e.g. server vs. CLI vs. worker).
+
+Run `:DapInit` to drop a starter file; edit it to taste, then `<leader>DL` to reload. If your debug session depends on env vars set by a Makefile, either launch Neovim from a shell where they're exported, or move them under each config's `env` key.
 
 ### AI (Claude Code)
 
