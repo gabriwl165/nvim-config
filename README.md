@@ -25,9 +25,10 @@ Includes LSP, auto-completion, formatting, linting, fuzzy finding, and a polishe
 7. [Go Development](#7-go-development)
 8. [Python Development](#8-python-development)
 9. [Key Bindings Reference](#9-key-bindings-reference)
-10. [External Tools Required](#10-external-tools-required)
-11. [Adding a New Language](#11-adding-a-new-language)
-12. [Troubleshooting](#12-troubleshooting)
+10. [Coming from VSCode?](#10-coming-from-vscode)
+11. [External Tools Required](#11-external-tools-required)
+12. [Adding a New Language](#12-adding-a-new-language)
+13. [Troubleshooting](#13-troubleshooting)
 
 ---
 
@@ -726,7 +727,87 @@ The `max-line-length = 88` and `extend-ignore` settings make flake8 compatible w
 
 ---
 
-## 10. External Tools Required
+## 10. Coming from VSCode?
+
+NeoVim is modal: most shortcuts below only apply in **Normal mode** (press `Esc` to get there).
+`<leader>` is `Space`.
+
+### The modal mindset
+
+| VSCode state | NeoVim equivalent |
+|-------------|-------------------|
+| Default (cursor moving, shortcuts active) | **Normal mode** — press `Esc` |
+| Typing text | **Insert mode** — press `i`, `a`, `o`, etc. |
+| Selecting text | **Visual mode** — press `v`, `V`, or `<C-v>` |
+
+### Navigation
+
+| VSCode | NeoVim | Notes |
+|--------|--------|-------|
+| `Ctrl+P` | `<leader>ff` | Fuzzy-find and open file |
+| `Ctrl+Shift+F` | `<leader>fg` | Search text across all files |
+| `Ctrl+F` | `/` then type | Search in current file (`n` / `N` for next/prev) |
+| `Ctrl+H` | `:%s/old/new/gc` | Find and replace (`c` to confirm each) |
+| `Ctrl+G` | `:<number>` or `<number>G` | Go to line |
+| `Ctrl+Home` / `Ctrl+End` | `gg` / `G` | Go to file start / end |
+| `Home` / `End` | `^` / `$` or `0` / `$` | Line start / end |
+| `Ctrl+Tab` | `<S-l>` | Next buffer/tab |
+| `Ctrl+Shift+Tab` | `<S-h>` | Previous buffer/tab |
+| `Ctrl+B` | `<leader>e` | Toggle file explorer sidebar |
+
+### Editing
+
+| VSCode | NeoVim | Notes |
+|--------|--------|-------|
+| `Ctrl+S` | `<leader>w` | Save file |
+| `Ctrl+Z` | `u` | Undo |
+| `Ctrl+Y` | `<C-r>` | Redo |
+| `Ctrl+X` (cut line) | `dd` | Delete (cut) current line |
+| `Ctrl+C` (copy line) | `yy` | Yank (copy) current line |
+| `Ctrl+V` | `p` | Paste after cursor |
+| `Ctrl+A` | `ggVG` | Select all |
+| `Ctrl+/` | `gcc` | Toggle line comment |
+| `Ctrl+/` (selection) | `gc` (visual) | Toggle comment on selection |
+| `Alt+Up` / `Alt+Down` | `<A-k>` / `<A-j>` | Move line/selection up/down |
+| `Ctrl+]` / `Ctrl+[` | `>>` / `<<` | Indent / dedent line (normal) |
+| `Tab` / `Shift+Tab` | `>gv` / `<gv` | Indent / dedent (visual, keeps selection) |
+| `Ctrl+Enter` | `o` then `Esc` | Insert blank line below |
+| `Ctrl+Shift+Enter` | `O` then `Esc` | Insert blank line above |
+| `Ctrl+Shift+K` | `dd` | Delete line |
+| `Ctrl+D` | `*` then `n` | Highlight + jump to next occurrence of word |
+| `Ctrl+W` | `<leader>bd` | Close current editor/buffer |
+
+### Code intelligence (LSP)
+
+| VSCode | NeoVim | Notes |
+|--------|--------|-------|
+| `F12` | `gd` | Go to definition |
+| `Shift+F12` | `gr` | Show all references |
+| `Ctrl+F12` | `gI` | Go to implementation |
+| `F2` | `<leader>lr` | Rename symbol |
+| `Ctrl+.` | `<leader>la` | Quick Fix / Code actions |
+| `Shift+Alt+F` | `<leader>lf` | Format document |
+| `Ctrl+Space` | `<C-Space>` (insert mode) | Trigger completion menu |
+| `Ctrl+K Ctrl+I` | `K` | Hover documentation |
+| Peek problems | `<leader>d` | Open diagnostic float |
+| Problems panel | `<leader>xx` | Toggle Trouble diagnostics panel |
+
+### Workspace / UI
+
+| VSCode | NeoVim | Notes |
+|--------|--------|-------|
+| `Ctrl+Shift+P` | `:` | Command palette — type any ex-command |
+| `Ctrl+Shift+E` | `<leader>e` | Focus file explorer |
+| `Ctrl+\\` | `:terminal` | Open a terminal split |
+| `Ctrl+\`` | `:terminal` | Open a terminal split |
+| Split editor right | `<leader>sv` | Vertical split |
+| Split editor down | `<leader>sh` | Horizontal split |
+| Close split | `<leader>sx` | Close current split |
+| Move between splits | `<C-h/j/k/l>` | Navigate windows (← ↓ ↑ →) |
+
+---
+
+## 11. External Tools Required
 
 Install all tools so Mason-installed servers and linters work correctly.
 
@@ -747,7 +828,7 @@ Install all tools so Mason-installed servers and linters work correctly.
 
 ---
 
-## 11. Adding a New Language
+## 12. Adding a New Language
 
 To add support for a new language (e.g., Rust), follow these steps:
 
@@ -817,7 +898,7 @@ autocmd("FileType", {
 
 ---
 
-## 12. Troubleshooting
+## 13. Troubleshooting
 
 ### Plugins not installing
 
