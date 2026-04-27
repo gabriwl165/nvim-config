@@ -105,7 +105,7 @@ node-tools:
 		exit 1; \
 	}
 	@echo "  Installing Node.js tools ..."
-	npm install -g prettier
+	sudo npm install -g prettier
 	@echo "  Node.js tools installed."
 
 # ─── Uninstall ────────────────────────────────────────────────────────────────
