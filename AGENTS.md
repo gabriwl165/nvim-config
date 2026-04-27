@@ -25,7 +25,7 @@ A modern Neovim setup built with **lazy.nvim**, targeting Go and Python developm
     │   └── autocmds.lua      Auto-commands (format-on-save, filetype tweaks...)
     └── plugins/
         ├── init.lua          lazy.nvim bootstrap + spec import
-        ├── ui.lua            Colorscheme, statusline, tree, gitsigns, dashboard, notifier
+        ├── ui.lua            Colorscheme, statusline, tree, gitsigns, fugitive, dashboard, notifier
         ├── editor.lua        Autopairs, surround, conform, nvim-lint, flash, trouble, todo
         ├── lsp.lua           Mason, nvim-lspconfig, gopls, pyright, lua_ls
         ├── completion.lua    nvim-cmp + LuaSnip + cmp-* sources
@@ -115,7 +115,8 @@ Lockfile: `lazy-lock.json` records the resolved branch + commit for each plugin.
 | `akinsho/bufferline.nvim` | Buffer tabs with LSP diagnostic badges (`version = "*"`) |
 | `nvim-tree/nvim-tree.lua` | File explorer (`<leader>e` toggle, `<leader>o` focus) |
 | `lukas-reineke/indent-blankline.nvim` | Indent guides (uses `main = "ibl"` for v3) |
-| `lewis6991/gitsigns.nvim` | Git diff signs + hunk-level operations |
+| `lewis6991/gitsigns.nvim` | Git diff signs + hunk-level operations (`<leader>gh*`) |
+| `tpope/vim-fugitive` (+ `tpope/vim-rhubarb`) | Full Git wrapper. `:Git`/`:G` runs any git command; lazy-loaded via `cmd` and `keys`. rhubarb adds GitHub URL handling for `:GBrowse`. |
 | `folke/which-key.nvim` | Keybinding popups (uses v3 `wk.add()` API for groups) |
 | `folke/snacks.nvim` | Provides `dashboard` + `notifier` modules (replaces alpha-nvim and nvim-notify) |
 

@@ -13,6 +13,7 @@ A modern Neovim setup for **Go** and **Python** development, with LSP, completio
 - Linting (golangci-lint, flake8)
 - Fuzzy finder (Telescope + fzf-native)
 - File explorer, statusline, buffer tabs, indent guides, git signs
+- Full Git workflow (fugitive: `:Git`, blame, diff split, browse)
 - Dashboard + notifications (snacks.nvim)
 - Claude Code CLI integration
 
@@ -139,14 +140,33 @@ On first launch, lazy.nvim bootstraps and installs every plugin. Mason auto-inst
 | `cs{old}{new}` | Change surround |
 | `ds{char}` | Delete surround |
 
-### Git (gitsigns)
+### Git — Fugitive (`tpope/vim-fugitive`)
+
+Full Git wrapper. `:Git` (or `:G`) runs any git command; useful subcommands have shortcuts below.
+
+| Key | Action |
+|-----|--------|
+| `<leader>gs` | Git status (interactive summary, press `g?` for help) |
+| `<leader>gc` | Git commit |
+| `<leader>gp` | Git pull |
+| `<leader>gP` | Git push |
+| `<leader>gb` | Git blame (current buffer) |
+| `<leader>gd` | Git diff (split against index) |
+| `<leader>gl` | Git log --oneline |
+| `<leader>gw` | Stage current file (`:Gwrite`) |
+| `<leader>gr` | Discard buffer changes (`:Gread`) |
+| `<leader>gO` | Open file (or visual selection) in GitHub web UI (`:GBrowse`) |
+
+### Git — Hunks (`gitsigns.nvim`)
 
 | Key | Action |
 |-----|--------|
 | `]c` / `[c` | Next / previous hunk |
 | `<leader>ghs` / `<leader>ghr` | Stage / reset hunk |
+| `<leader>ghS` / `<leader>ghR` | Stage / reset entire buffer |
 | `<leader>ghp` | Preview hunk |
-| `<leader>ghb` | Blame line |
+| `<leader>ghb` | Blame line (full info) |
+| `<leader>ghd` | Diff this file |
 
 ### Go
 

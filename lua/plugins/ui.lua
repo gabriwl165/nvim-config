@@ -147,7 +147,7 @@ return {
             { "<leader>gc", "<cmd>Git commit<cr>",          desc = "Git: commit" },
             { "<leader>gp", "<cmd>Git pull<cr>",            desc = "Git: pull" },
             { "<leader>gP", "<cmd>Git push<cr>",            desc = "Git: push" },
-            { "<leader>gB", "<cmd>Git blame<cr>",           desc = "Git: blame buffer" },
+            { "<leader>gb", "<cmd>Git blame<cr>",           desc = "Git: blame buffer" },
             { "<leader>gd", "<cmd>Gdiffsplit<cr>",          desc = "Git: diff against index" },
             { "<leader>gl", "<cmd>Git log --oneline<cr>",   desc = "Git: log (oneline)" },
             { "<leader>gw", "<cmd>Gwrite<cr>",              desc = "Git: stage current file" },
