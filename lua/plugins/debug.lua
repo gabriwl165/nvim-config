@@ -37,14 +37,6 @@ return {
             { "<leader>Dh",  function() require("dap.ui.widgets").hover() end,     desc = "Debug: hover variable" },
             { "<leader>Du",  function() require("dapui").toggle() end,             desc = "Debug: toggle UI" },
             { "<leader>De",  function() require("dapui").eval() end,               desc = "Debug: eval expression", mode = { "n", "v" } },
-            { "<leader>DL",  function()
-                require("dap.ext.vscode").load_launchjs(nil, {
-                    go = { "go" },
-                    delve = { "go" },
-                    debugpy = { "python" },
-                })
-                vim.notify("Reloaded .vscode/launch.json", vim.log.levels.INFO)
-            end, desc = "Debug: reload launch.json" },
             { "<leader>DI",  "<cmd>DapInit<cr>",                                 desc = "Debug: bootstrap .vscode/launch.json" },
         },
         config = function()
@@ -97,13 +89,8 @@ return {
             vim.fn.sign_define("DapLogPoint",            { text = "◆", texthl = "DiagnosticInfo",  linehl = "",       numhl = "" })
             vim.fn.sign_define("DapStopped",             { text = "→", texthl = "DiagnosticOk",    linehl = "Visual", numhl = "" })
 
-            pcall(function()
-                require("dap.ext.vscode").load_launchjs(nil, {
-                    go = { "go" },
-                    delve = { "go" },
-                    debugpy = { "python" },
-                })
-            end)
+            -- nvim-dap auto-loads .vscode/launch.json on demand (see :help dap-providers),
+            -- so explicit load_launchjs() calls are no longer needed.
 
             -- :DapInit — scaffold a generic .vscode/launch.json into the cwd.
             -- Useful for projects that don't have a debug config yet. Existing
@@ -181,12 +168,6 @@ return {
                 end
                 fd:write(launch_json_template)
                 fd:close()
-
-                require("dap.ext.vscode").load_launchjs(file, {
-                    go = { "go" },
-                    delve = { "go" },
-                    debugpy = { "python" },
-                })
 
                 vim.notify("Wrote default debug configs to " .. file, vim.log.levels.INFO)
             end, {

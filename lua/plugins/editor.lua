@@ -74,11 +74,23 @@ return {
                 python = { "flake8" },
             }
 
+            local function try_lint_if_available()
+                local names = lint.linters_by_ft[vim.bo.filetype] or {}
+                for _, name in ipairs(names) do
+                    local linter = lint.linters[name]
+                    if linter then
+                        local cmd = type(linter.cmd) == "function" and linter.cmd() or linter.cmd
+                        if vim.fn.executable(cmd) ~= 1 then
+                            return
+                        end
+                    end
+                end
+                lint.try_lint()
+            end
+
             vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
                 group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),
-                callback = function()
-                    lint.try_lint()
-                end,
+                callback = try_lint_if_available,
             })
         end,
     },

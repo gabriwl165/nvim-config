@@ -15,6 +15,31 @@ return {
         },
     },
 
+    -- ─── Mason Tool Installer (linters / formatters / DAP adapters) ──────────
+    -- Auto-installs the non-LSP tools listed below on first start. LSP servers
+    -- are still handled by mason-lspconfig in the spec below; DAP adapters
+    -- (delve, debugpy) are handled by mason-nvim-dap in plugins/debug.lua.
+    {
+        "WhoIsSethDaniel/mason-tool-installer.nvim",
+        dependencies = { "williamboman/mason.nvim" },
+        cmd = { "MasonToolsInstall", "MasonToolsUpdate", "MasonToolsClean" },
+        event = "VeryLazy",
+        opts = {
+            ensure_installed = {
+                "golangci-lint",
+                "flake8",
+                "gofumpt",
+                "goimports",
+                "isort",
+                "black",
+                "stylua",
+                "prettier",
+            },
+            auto_update = false,
+            run_on_start = true,
+        },
+    },
+
     -- ─── LSP Configuration (Neovim 0.11+ vim.lsp.config API) ─────────────────
     {
         "neovim/nvim-lspconfig",
