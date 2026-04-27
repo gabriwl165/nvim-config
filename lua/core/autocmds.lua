@@ -85,7 +85,7 @@ autocmd("BufWritePre", {
     callback = function()
         local ok, conform = pcall(require, "conform")
         if ok then
-            conform.format({ async = false, lsp_fallback = true, timeout_ms = 1000 })
+            conform.format({ async = false, lsp_format = "fallback", timeout_ms = 1000 })
         end
     end,
 })

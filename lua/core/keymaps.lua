@@ -59,7 +59,7 @@ map("n", "<leader>ft", "<cmd>TodoTelescope<cr>",         "Find TODOs")
 
 -- ─── LSP (generic) ──────────────────────────────────────────────────────────
 map("n", "<leader>lf", function()
-    require("conform").format({ async = true, lsp_fallback = true })
+    require("conform").format({ async = true, lsp_format = "fallback" })
 end, "Format file")
 map("n", "<leader>lm", "<cmd>Mason<cr>",   "Mason package manager")
 map("n", "<leader>li", "<cmd>LspInfo<cr>", "LSP info")

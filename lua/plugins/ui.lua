@@ -128,13 +128,33 @@ return {
         },
     },
 
-    -- ─── Notifications ────────────────────────────────────────────────────────
+    -- ─── Git wrapper (fugitive) ───────────────────────────────────────────────
+    -- :Git / :G runs any git command. Lazy-loaded by command and keys.
+    -- vim-rhubarb adds GitHub URL support to :GBrowse.
     {
-        "rcarriga/nvim-notify",
-        opts = { timeout = 3000 },
-        init = function()
-            vim.notify = require("notify")
-        end,
+        "tpope/vim-fugitive",
+        dependencies = { "tpope/vim-rhubarb" },
+        cmd = {
+            "Git", "G",
+            "Gdiffsplit", "Gvdiffsplit",
+            "Gedit", "Gsplit", "Gread", "Gwrite",
+            "Ggrep", "Glgrep",
+            "GMove", "GRename", "GDelete", "GRemove",
+            "GBrowse",
+        },
+        keys = {
+            { "<leader>gs", "<cmd>Git<cr>",                 desc = "Git: status (summary)" },
+            { "<leader>gc", "<cmd>Git commit<cr>",          desc = "Git: commit" },
+            { "<leader>gp", "<cmd>Git pull<cr>",            desc = "Git: pull" },
+            { "<leader>gP", "<cmd>Git push<cr>",            desc = "Git: push" },
+            { "<leader>gB", "<cmd>Git blame<cr>",           desc = "Git: blame buffer" },
+            { "<leader>gd", "<cmd>Gdiffsplit<cr>",          desc = "Git: diff against index" },
+            { "<leader>gl", "<cmd>Git log --oneline<cr>",   desc = "Git: log (oneline)" },
+            { "<leader>gw", "<cmd>Gwrite<cr>",              desc = "Git: stage current file" },
+            { "<leader>gr", "<cmd>Gread<cr>",               desc = "Git: checkout buffer" },
+            { "<leader>gO", "<cmd>GBrowse<cr>",             desc = "Git: open in browser" },
+            { "<leader>gO", ":GBrowse<cr>", mode = "v",     desc = "Git: open selection in browser" },
+        },
     },
 
     -- ─── Key hints ────────────────────────────────────────────────────────────
@@ -159,37 +179,40 @@ return {
         end,
     },
 
-    -- ─── Dashboard ────────────────────────────────────────────────────────────
+    -- ─── Snacks (dashboard + notifier) ────────────────────────────────────────
     {
-        "goolord/alpha-nvim",
-        event = "VimEnter",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        config = function()
-            local alpha = require("alpha")
-            local dashboard = require("alpha.themes.dashboard")
-
-            dashboard.section.header.val = {
-                "                                                     ",
-                "  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗",
-                "  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║",
-                "  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║",
-                "  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║",
-                "  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║",
-                "  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝",
-                "                                                     ",
-            }
-
-            dashboard.section.buttons.val = {
-                dashboard.button("f", "  Find file",    "<cmd>Telescope find_files<cr>"),
-                dashboard.button("e", "  New file",     "<cmd>ene <BAR> startinsert<cr>"),
-                dashboard.button("r", "  Recent files", "<cmd>Telescope oldfiles<cr>"),
-                dashboard.button("g", "  Find text",    "<cmd>Telescope live_grep<cr>"),
-                dashboard.button("c", "  Config",       "<cmd>e $MYVIMRC<cr>"),
-                dashboard.button("l", "  Lazy",         "<cmd>Lazy<cr>"),
-                dashboard.button("q", "  Quit",         "<cmd>qa<cr>"),
-            }
-
-            alpha.setup(dashboard.opts)
-        end,
+        "folke/snacks.nvim",
+        priority = 1000,
+        lazy = false,
+        opts = {
+            notifier = {
+                enabled = true,
+                timeout = 3000,
+            },
+            dashboard = {
+                enabled = true,
+                preset = {
+                    header = table.concat({
+                        "",
+                        "  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗",
+                        "  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║",
+                        "  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║",
+                        "  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║",
+                        "  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║",
+                        "  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝",
+                        "",
+                    }, "\n"),
+                    keys = {
+                        { icon = " ", key = "f", desc = "Find file",    action = ":Telescope find_files" },
+                        { icon = " ", key = "e", desc = "New file",     action = ":ene | startinsert" },
+                        { icon = " ", key = "r", desc = "Recent files", action = ":Telescope oldfiles" },
+                        { icon = " ", key = "g", desc = "Find text",    action = ":Telescope live_grep" },
+                        { icon = " ", key = "c", desc = "Config",       action = ":e $MYVIMRC" },
+                        { icon = "󰒲 ", key = "l", desc = "Lazy",         action = ":Lazy" },
+                        { icon = " ", key = "q", desc = "Quit",         action = ":qa" },
+                    },
+                },
+            },
+        },
     },
 }

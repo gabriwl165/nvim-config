@@ -9,18 +9,6 @@ return {
         },
     },
 
-    -- ─── Comments ─────────────────────────────────────────────────────────────
-    {
-        "numToStr/Comment.nvim",
-        event = { "BufReadPre", "BufNewFile" },
-        dependencies = { "JoosepAlviste/nvim-ts-context-commentstring" },
-        config = function()
-            require("Comment").setup({
-                pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
-            })
-        end,
-    },
-
     -- ─── Surround ─────────────────────────────────────────────────────────────
     {
         "kylechui/nvim-surround",
@@ -72,7 +60,7 @@ return {
             },
             -- format_on_save is handled in autocmds.lua for fine-grained control
             format_after_save = {
-                lsp_fallback = true,
+                lsp_format = "fallback",
             },
         },
     },
