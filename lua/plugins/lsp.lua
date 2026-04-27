@@ -15,7 +15,7 @@ return {
         },
     },
 
-    -- ─── LSP Configuration ────────────────────────────────────────────────────
+    -- ─── LSP Configuration (Neovim 0.11+ vim.lsp.config API) ─────────────────
     {
         "neovim/nvim-lspconfig",
         event = { "BufReadPre", "BufNewFile" },
@@ -23,61 +23,58 @@ return {
             "williamboman/mason.nvim",
             "williamboman/mason-lspconfig.nvim",
             "hrsh7th/cmp-nvim-lsp",
-            "folke/neodev.nvim",
+            "folke/lazydev.nvim",
         },
         config = function()
-            -- neodev must be set up before lspconfig.lua_ls
-            require("neodev").setup()
+            -- Mason must be set up before mason-lspconfig so its bin/ is on PATH
+            require("mason").setup()
 
             require("mason-lspconfig").setup({
                 ensure_installed = {
-                    "gopls",    -- Go
-                    "pyright",  -- Python
-                    "lua_ls",   -- Lua (for editing this config)
+                    "gopls",   -- Go
+                    "pyright", -- Python
+                    "lua_ls",  -- Lua
                 },
-                automatic_installation = true,
+                -- mason-lspconfig 2.x: auto-enables installed servers via vim.lsp.enable()
+                automatic_enable = true,
             })
 
-            local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-            -- Rounded borders everywhere
-            local border = "rounded"
-            vim.lsp.handlers["textDocument/hover"] = function(err, result, ctx, config)
-                vim.lsp.handlers.hover(err, result, ctx, vim.tbl_extend("force", config or {}, { border = border }))
-            end
-            vim.lsp.handlers["textDocument/signatureHelp"] = function(err, result, ctx, config)
-                vim.lsp.handlers.signature_help(err, result, ctx, vim.tbl_extend("force", config or {}, { border = border }))
-            end
+            -- Rounded borders for floating LSP windows (Neovim 0.11+ global option)
+            vim.o.winborder = "rounded"
 
             vim.diagnostic.config({
                 virtual_text = { prefix = "●" },
                 severity_sort = true,
-                float = { source = "always", border = border },
+                float = { source = true, border = "rounded" },
             })
 
-            -- Keymaps applied when any LSP attaches to a buffer
-            local on_attach = function(_, bufnr)
-                local m = function(keys, func, desc)
-                    vim.keymap.set("n", keys, func, { buffer = bufnr, desc = "LSP: " .. desc })
-                end
+            -- LSP keymaps fire on attach to any buffer
+            vim.api.nvim_create_autocmd("LspAttach", {
+                callback = function(event)
+                    local m = function(keys, func, desc)
+                        vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+                    end
 
-                m("gd",          vim.lsp.buf.definition,      "Go to definition")
-                m("gD",          vim.lsp.buf.declaration,     "Go to declaration")
-                m("gr",          vim.lsp.buf.references,      "Go to references")
-                m("gI",          vim.lsp.buf.implementation,  "Go to implementation")
-                m("gy",          vim.lsp.buf.type_definition, "Go to type definition")
-                m("K",           vim.lsp.buf.hover,           "Hover documentation")
-                m("<C-k>",       vim.lsp.buf.signature_help,  "Signature help")
-                m("<leader>la",  vim.lsp.buf.code_action,     "Code action")
-                m("<leader>lr",  vim.lsp.buf.rename,          "Rename symbol")
-                m("<leader>ls",  vim.lsp.buf.document_symbol, "Document symbols")
-                m("<leader>lS",  vim.lsp.buf.workspace_symbol,"Workspace symbols")
-            end
+                    m("gd",         vim.lsp.buf.definition,       "Go to definition")
+                    m("gD",         vim.lsp.buf.declaration,      "Go to declaration")
+                    m("gr",         vim.lsp.buf.references,       "Go to references")
+                    m("gI",         vim.lsp.buf.implementation,   "Go to implementation")
+                    m("gy",         vim.lsp.buf.type_definition,  "Go to type definition")
+                    m("K",          vim.lsp.buf.hover,            "Hover documentation")
+                    m("<C-k>",      vim.lsp.buf.signature_help,   "Signature help")
+                    m("<leader>la", vim.lsp.buf.code_action,      "Code action")
+                    m("<leader>lr", vim.lsp.buf.rename,           "Rename symbol")
+                    m("<leader>ls", vim.lsp.buf.document_symbol,  "Document symbols")
+                    m("<leader>lS", vim.lsp.buf.workspace_symbol, "Workspace symbols")
+                end,
+            })
+
+            -- Default capabilities for every server (nvim-cmp completion support)
+            local capabilities = require("cmp_nvim_lsp").default_capabilities()
+            vim.lsp.config("*", { capabilities = capabilities })
 
             -- ── Go (gopls) ────────────────────────────────────────────────────
-            require("lspconfig").gopls.setup({
-                capabilities = capabilities,
-                on_attach = on_attach,
+            vim.lsp.config("gopls", {
                 settings = {
                     gopls = {
                         gofumpt = true,
@@ -116,9 +113,7 @@ return {
             })
 
             -- ── Python (pyright) ──────────────────────────────────────────────
-            require("lspconfig").pyright.setup({
-                capabilities = capabilities,
-                on_attach = on_attach,
+            vim.lsp.config("pyright", {
                 settings = {
                     pyright = {
                         autoImportCompletion = true,
@@ -134,10 +129,8 @@ return {
                 },
             })
 
-            -- ── Lua (lua_ls) — for editing this config ────────────────────────
-            require("lspconfig").lua_ls.setup({
-                capabilities = capabilities,
-                on_attach = on_attach,
+            -- ── Lua (lua_ls) ──────────────────────────────────────────────────
+            vim.lsp.config("lua_ls", {
                 settings = {
                     Lua = {
                         workspace = { checkThirdParty = false },
@@ -149,6 +142,14 @@ return {
         end,
     },
 
-    -- neodev must be in the plugin list so lazy can install it
-    { "folke/neodev.nvim", opts = {} },
+    -- lazydev: Neovim API type hints for lua_ls (replaces deprecated neodev)
+    {
+        "folke/lazydev.nvim",
+        ft = "lua",
+        opts = {
+            library = {
+                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+            },
+        },
+    },
 }
