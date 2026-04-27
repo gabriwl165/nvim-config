@@ -163,7 +163,7 @@ vim.lsp.config("lua_ls", { settings = { Lua = { ... } } })
 |---------|--------|
 | `gofumpt = true` | Stricter gofmt inside gopls |
 | `staticcheck = true` | Extra static analyses |
-| `analyses.{nilness, unusedparams, unusedwrite, fieldalignment, useany}` | Enabled |
+| `analyses.{nilness, unusedparams, unusedwrite, useany}` | Enabled (note: `fieldalignment` removed upstream in gopls v0.17.0; use hover info instead) |
 | `hints.*` | All inlay hint categories enabled |
 | `usePlaceholders = true` | Function arg placeholders in completions |
 | `completeUnimported = true` | Suggests symbols from unimported packages |
