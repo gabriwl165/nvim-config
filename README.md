@@ -119,15 +119,49 @@ On first launch, lazy.nvim bootstraps and installs every plugin. Mason auto-inst
 | `[d` / `]d` | Previous / next diagnostic |
 | `<leader>xx` | Toggle Trouble panel |
 
-### Buffers & Windows
+### Buffers (open files) & Windows (splits)
+
+> **Mental model:**
+> - **Buffers** are open files (one per file). `<S-l>` and `<S-h>` cycle through them.
+> - **Windows** are visible panes/splits. `<C-h/j/k/l>` moves between them.
+> - **Tabs** are whole layouts of windows (rarely needed). See below.
 
 | Key | Action |
 |-----|--------|
-| `<S-l>` / `<S-h>` | Next / previous buffer |
-| `<leader>bd` | Delete buffer |
-| `<C-h/j/k/l>` | Move between windows |
+| `<S-l>` / `<S-h>` | Next / previous **buffer** (open file) |
+| `<leader>fb` | Pick buffer with Telescope |
+| `<leader>bd` | Close current buffer |
+| `:e path/to/file` | Open another file in a new buffer |
+| `<C-h/j/k/l>` | Move between **windows** (splits) |
 | `<leader>sv` / `<leader>sh` | Vertical / horizontal split |
 | `<leader>sx` | Close current split |
+| `<leader><Tab>n` | New tab |
+| `<leader><Tab>l` / `<leader><Tab>h` | Next / previous tab |
+| `<leader><Tab>x` | Close tab |
+
+### Terminal
+
+Use terminal **splits** so command output doesn't take over the whole screen. The Go and Python run keymaps (`<leader>gor`, `<leader>pyt`, etc.) already open in a bottom split.
+
+| Key | Action |
+|-----|--------|
+| `<leader>tt` | Open terminal in horizontal split (bottom) |
+| `<leader>tv` | Open terminal in vertical split (right) |
+| `<leader>tf` | Open terminal in a new tab (full-screen) |
+| `<Esc><Esc>` | Leave terminal-insert mode (double-Esc) |
+| `<C-h/j/k/l>` | Jump to another window from inside the terminal |
+| `<leader>sx` | Close the terminal split |
+| `i` / `a` | Re-enter terminal-insert mode (after `<Esc><Esc>`) |
+| `:bd!` | Force-kill the terminal buffer (and its process) |
+
+**Typical workflow when running Go/Python:**
+
+1. `<leader>gor` → output appears in a bottom split.
+2. Press `<Esc><Esc>` to leave insert mode (so you can scroll).
+3. `<C-k>` to jump back to your code (or `<C-h>`/`<C-j>`/`<C-l>` depending on layout).
+4. When done, `<C-j>` back into the terminal split, then `<leader>sx` to close it.
+
+To run multiple commands side-by-side, just call `<leader>tt` again — each call opens a fresh terminal split.
 
 ### Editing
 

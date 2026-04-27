@@ -166,15 +166,17 @@ return {
             local wk = require("which-key")
             wk.setup(opts)
             wk.add({
-                { "<leader>f",   group = "Find (Telescope)" },
-                { "<leader>g",   group = "Git" },
-                { "<leader>gh",  group = "Git hunks" },
-                { "<leader>l",   group = "LSP" },
-                { "<leader>s",   group = "Splits" },
-                { "<leader>b",   group = "Buffers" },
-                { "<leader>x",   group = "Trouble / Diagnostics" },
-                { "<leader>go",  group = "Go" },
-                { "<leader>py",  group = "Python" },
+                { "<leader>f",     group = "Find (Telescope)" },
+                { "<leader>g",     group = "Git" },
+                { "<leader>gh",    group = "Git hunks" },
+                { "<leader>l",     group = "LSP" },
+                { "<leader>s",     group = "Splits" },
+                { "<leader>b",     group = "Buffers" },
+                { "<leader>x",     group = "Trouble / Diagnostics" },
+                { "<leader>go",    group = "Go" },
+                { "<leader>py",    group = "Python" },
+                { "<leader>t",     group = "Terminal" },
+                { "<leader><Tab>", group = "Tabs" },
             })
         end,
     },

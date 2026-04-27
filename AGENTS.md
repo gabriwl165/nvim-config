@@ -218,6 +218,7 @@ Default insert-mode mappings inside Telescope: `<C-j>`/`<C-k>` next/prev, `<C-q>
 
 - **Per-language autocmds** live in `core/autocmds.lua` (use `vim.opt_local.*`).
 - **Per-language keymaps** use a `<leader>{lang-prefix}` pattern: `<leader>go*` for Go, `<leader>py*` for Python, `<leader>a*` for AI.
+- **Run / test / build commands** open a bottom terminal split (`botright 15split | terminal cmd`) — never blocking `:!`. This keeps the screen usable while logs stream. `<Esc><Esc>` exits terminal-insert; `<leader>sx` closes the split.
 - **Plugin specs** are grouped by domain, never by language. A new language touches multiple files (LSP, conform, lint, treesitter, autocmds).
 - **Format-on-save** is gated through conform with `lsp_format = "fallback"`. Direct `vim.lsp.buf.format()` is not used.
 - **No direct database/network calls** from plugin specs. All side effects belong in `config = function() ... end` blocks evaluated by lazy.

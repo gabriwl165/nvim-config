@@ -74,13 +74,34 @@ map("n", "<leader>xx", "<cmd>TroubleToggle<cr>",                          "Toggl
 map("n", "<leader>xw", "<cmd>TroubleToggle workspace_diagnostics<cr>",    "Workspace diagnostics")
 map("n", "<leader>xd", "<cmd>TroubleToggle document_diagnostics<cr>",     "Document diagnostics")
 
+-- ─── Terminal ───────────────────────────────────────────────────────────────
+-- Open terminals in splits so they don't eat the whole screen.
+map("n", "<leader>tt", "<cmd>botright 12split | terminal<cr>",  "Terminal: horizontal split")
+map("n", "<leader>tv", "<cmd>botright vsplit | terminal<cr>",   "Terminal: vertical split")
+map("n", "<leader>tf", "<cmd>tabnew | terminal<cr>",            "Terminal: new tab")
+
+-- Exit terminal-insert mode with double Esc; window nav still works inside terminals.
+map("t", "<Esc><Esc>", "<C-\\><C-n>",            "Terminal: leave insert mode")
+map("t", "<C-h>",      "<C-\\><C-n><C-w>h",     "Terminal: window left")
+map("t", "<C-j>",      "<C-\\><C-n><C-w>j",     "Terminal: window below")
+map("t", "<C-k>",      "<C-\\><C-n><C-w>k",     "Terminal: window above")
+map("t", "<C-l>",      "<C-\\><C-n><C-w>l",     "Terminal: window right")
+
+-- ─── Tabs (whole layouts) ───────────────────────────────────────────────────
+map("n", "<leader><Tab>n", "<cmd>tabnew<cr>",     "Tab: new")
+map("n", "<leader><Tab>x", "<cmd>tabclose<cr>",   "Tab: close")
+map("n", "<leader><Tab>l", "<cmd>tabnext<cr>",    "Tab: next")
+map("n", "<leader><Tab>h", "<cmd>tabprevious<cr>","Tab: previous")
+
 -- ─── Go ─────────────────────────────────────────────────────────────────────
-map("n", "<leader>gor", "<cmd>!go run %<cr>",       "Go: run current file")
-map("n", "<leader>got", "<cmd>!go test ./...<cr>",  "Go: test all packages")
-map("n", "<leader>gob", "<cmd>!go build ./...<cr>", "Go: build all packages")
-map("n", "<leader>goi", "<cmd>!go mod tidy<cr>",    "Go: tidy modules")
+-- Use a bottom terminal split so logs don't take over the screen.
+-- Press <Esc><Esc> to leave insert, then `<leader>sx` to close the split.
+map("n", "<leader>gor", "<cmd>botright 15split | terminal go run %<cr>",       "Go: run current file")
+map("n", "<leader>got", "<cmd>botright 15split | terminal go test ./...<cr>",  "Go: test all packages")
+map("n", "<leader>gob", "<cmd>botright 15split | terminal go build ./...<cr>", "Go: build all packages")
+map("n", "<leader>goi", "<cmd>botright 15split | terminal go mod tidy<cr>",    "Go: tidy modules")
 
 -- ─── Python ─────────────────────────────────────────────────────────────────
-map("n", "<leader>pyr", "<cmd>!python3 %<cr>",           "Python: run current file")
-map("n", "<leader>pyt", "<cmd>!python3 -m pytest<cr>",   "Python: run pytest")
-map("n", "<leader>pyv", "<cmd>!python3 -m venv .venv<cr>","Python: create venv")
+map("n", "<leader>pyr", "<cmd>botright 15split | terminal python3 %<cr>",           "Python: run current file")
+map("n", "<leader>pyt", "<cmd>botright 15split | terminal python3 -m pytest<cr>",   "Python: run pytest")
+map("n", "<leader>pyv", "<cmd>!python3 -m venv .venv<cr>",                          "Python: create venv")
